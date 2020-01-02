@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.testspringboot.dao.VideoInfoMapper" >
+  <resultMap id="BaseResultMap" type="com.example.testspringboot.entiy.VideoInfo" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="VideoName" property="videoname" jdbcType="VARCHAR" />
+    <result column="VideoLength" property="videolength" jdbcType="TIME" />
+    <result column="VideoProducer" property="videoproducer" jdbcType="VARCHAR" />
+    <result column="VideoDescribe" property="videodescribe" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, VideoName, VideoLength, VideoProducer, VideoDescribe
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from video_info
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from video_info
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.example.testspringboot.entiy.VideoInfo" >
+    insert into video_info (id, VideoName, VideoLength, 
+      VideoProducer, VideoDescribe)
+    values (#{id,jdbcType=INTEGER}, #{videoname,jdbcType=VARCHAR}, #{videolength,jdbcType=TIME}, 
+      #{videoproducer,jdbcType=VARCHAR}, #{videodescribe,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.example.testspringboot.entiy.VideoInfo" >
+    insert into video_info
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="videoname != null" >
+        VideoName,
+      </if>
+      <if test="videolength != null" >
+        VideoLength,
+      </if>
+      <if test="videoproducer != null" >
+        VideoProducer,
+      </if>
+      <if test="videodescribe != null" >
+        VideoDescribe,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="videoname != null" >
+        #{videoname,jdbcType=VARCHAR},
+      </if>
+      <if test="videolength != null" >
+        #{videolength,jdbcType=TIME},
+      </if>
+      <if test="videoproducer != null" >
+        #{videoproducer,jdbcType=VARCHAR},
+      </if>
+      <if test="videodescribe != null" >
+        #{videodescribe,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.example.testspringboot.entiy.VideoInfo" >
+    update video_info
+    <set >
+      <if test="videoname != null" >
+        VideoName = #{videoname,jdbcType=VARCHAR},
+      </if>
+      <if test="videolength != null" >
+        VideoLength = #{videolength,jdbcType=TIME},
+      </if>
+      <if test="videoproducer != null" >
+        VideoProducer = #{videoproducer,jdbcType=VARCHAR},
+      </if>
+      <if test="videodescribe != null" >
+        VideoDescribe = #{videodescribe,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.example.testspringboot.entiy.VideoInfo" >
+    update video_info
+    set VideoName = #{videoname,jdbcType=VARCHAR},
+      VideoLength = #{videolength,jdbcType=TIME},
+      VideoProducer = #{videoproducer,jdbcType=VARCHAR},
+      VideoDescribe = #{videodescribe,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+  <insert id="insertList" parameterType="java.util.List">
+    insert into video_info (videoname,videolength,videoproducer,videodescribe) values
+    <foreach collection="list" item="item" separator=",">
+      <!--这个list小写-->
+      (
+      #{item.videoname},
+      #{item.videolength},
+      #{item.videoproducer},
+      #{item.videodescribe}
+      )
+    </foreach>
+  </insert>
+</mapper>
