@@ -54,7 +54,7 @@
         left:0;
         height:100%;
         width:100%;
-        background-image:url(/images/background.jpg);
+        background-image:url(/img/background.jpg);
         background-position: center 0;
         background-repeat: no-repeat;
         background-attachment:fixed;
