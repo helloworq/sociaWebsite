@@ -55,22 +55,31 @@ class DemoApplicationTests {
             list.add(zhihudownloadinfo);
         }
         mapper.selectByPrimaryKey(1);
-        */
-        for (int i = 0; i < 30; i++) {
+
+
+        for (int i = 46; i < 246; i++) {
             mapper1.deleteByPrimaryKey(i);
         }
+
+
+         */
+
         List<VideoInfo> list = new ArrayList<>();
-        for (int i = 0; i < 15; i++) {
+        for (int i = 0; i < 1000; i++) {
             VideoInfo videoInfo = new VideoInfo();
+
             videoInfo.setVideoname("视频"+i);
             videoInfo.setVideolength(new Date());
             videoInfo.setVideodescribe("aassddffgg"+i);
             videoInfo.setVideoproducer("李子柒"+i);
+
+
             list.add(videoInfo);
         }
 
-        System.out.println(JSON.toJSON(list));
-        //mapper1.insertList(list);
+        mapper1.insertList(list);
+        //System.out.println(JSON.toJSON(list));
+
 
     }
 

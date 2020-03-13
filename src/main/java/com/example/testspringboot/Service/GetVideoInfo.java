@@ -32,19 +32,22 @@ public class GetVideoInfo {
     @RequestMapping(value = "/getVideoInfo",method = RequestMethod.POST)
     public Map<String,Object> map(
             @RequestParam(value = "pageIndex",required = true) int pageIndex){
-        System.out.println("Ajax到达1,索引值："+pageIndex);
+        //System.out.println("Ajax到达1,索引值："+pageIndex);
+        //存储键值数据
+        int beilvNumber=15;//1-15   16-30   31-45
         Map<String,Object> map=new HashMap<>();
         List<VideoInfo> list=new ArrayList<>();
-        System.out.println("Ajax到达1,索引值："+pageIndex);
-        for (int i = 30; i < 46; i++) {
-            System.out.println("正在操作...");
-            System.out.println(mapper.selectByPrimaryKey(i).getVideodescribe());
+        //System.out.println("Ajax到达1,索引值："+pageIndex);
+        //从数据库中读取15项数据，存入list
+        for (int i = pageIndex*beilvNumber-14; i <= pageIndex*beilvNumber; i++) {//246  445
+            System.out.println("正在操作..."+i);
+            //System.out.println(mapper.selectByPrimaryKey(i).getVideodescribe());
             list.add(mapper.selectByPrimaryKey(i));
         }
-        System.out.println(JSON.toJSON(list));
+        //System.out.println(JSON.toJSON(list));
+        //将获取好的数据存入map
         map.put("msg", JSON.toJSON(list));
-
-        System.out.println("Ajax出去");
+        //System.out.println("Ajax出去");
         return map;
     }
 }

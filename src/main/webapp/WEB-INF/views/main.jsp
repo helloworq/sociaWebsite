@@ -27,49 +27,103 @@
 </head>
 
 <script type="text/javascript">
-	function printMsg() {
-		//获取需要替换部分的html内容，并且去除所有空格符
-		//<h4class="media-heading"id="first_h4">嵌入媒体标题</h4>时长：<br>作者：<br>描述：
-		/*
-		for(var i=1;i<=15;i++){
-			var title=document.getElementById("font_h"+i).innerHTML.trim().replace(/\s/g,"")
-			document.getElementById("font_h"+i).innerHTML=title.replace("嵌入媒体标题","芒种"+i)
-			var rest=document.getElementById("text_p"+i).innerHTML.trim().replace(/\s/g,"")
-			document.getElementById("text_p"+i).innerHTML=rest.replace("时长：","时长：12:12")
-					.replace("作者：","作者：李子柒")
-					.replace("描述：","描述：山水田园诗意般的生活")
-		}
-        */
-		alert("Ajax开始");
-		var pageIndex=1
-        $.ajax({
-            ansyc: false,//是否异步发送
-            type: "POST",
-            url: "/controller/getVideoInfo",//指向loginCheck处理器
-            data:{"pageIndex":pageIndex},//目标url
-            dataType:"json",
-            success: function (data) {
-                if(data.msg!=null) {
-                    alert("到这了111"+data.msg)
-					alert(data.msg[0].videoname)
-					alert(data.msg[15].videoproducer)
-					for(var i=1;i<=15;i++) {
-						var title = document.getElementById("font_h" + i).innerHTML.trim().replace(/\s/g, "")
-						document.getElementById("font_h" + i).innerHTML = title.replace("嵌入媒体标题", data.msg[i].videoname)
-						var rest = document.getElementById("text_p" + i).innerHTML.trim().replace(/\s/g, "")
-						document.getElementById("text_p" + i).innerHTML = rest.replace("时长：","时长："+ data.msg[i].videolength)
-								.replace("作者：", "作者："+data.msg[i].videoproducer)
-								.replace("描述：", "描述："+data.msg[i].videodescribe)
-					}
+    var currentPage=1;
+    window.onload = function () {
+        var myul = document.getElementById("myul");
+        myul.onclick = function (event) {
+            event.preventDefault();
+            //alert(event.target.innerText);
+            var getMSG = event.target.innerText;
+            //alert("<<".length)
+            //document.getElementById("txt").innerHTML=event.target.innerHTML;
+            //凭借下面两个页码数据可以判断点击的具体位置
+            //currentPageIndex   firstPageIndex   maxPageIndex
+            var currentPageIndex = Number(event.target.innerText);//当前点击页码
+            var firstPageIndex = Number(document.getElementById("pageIndex1").innerText);//当前数字索引第一个页码
+            var maxPageIndex = Number(document.getElementById("MaxNum").innerText);//最大页码
+            //第一部分，如果点击的是数字索引则开始判断
+            if (!isNaN(currentPageIndex)) {
+                //alert(document.getElementById("firstNum").innerText);
+                //如果点击的是前四个索引则开始判断，下面if里的条件确保选择的是前四个索引
+                if (currentPageIndex - firstPageIndex < 4) {
+                    //document.getElementById("txt").innerHTML=currentPage;
+                    //如果选择的是当前数字索引第一个页码则全部页码减一以达到页码更新的功能
+                    if (firstPageIndex != 1 && (currentPageIndex - firstPageIndex == 0)) {
+                        for (var i = 1; i <= 5; i++) {
+                            document.getElementById("pageIndex" + i).innerText--;
+                        }
+                    }
+                    currentPage = Number(event.target.innerText);
                 }
-                else
-                    alert("ajax请求成功但是链接出现了问题"+data.msg);
-            },
-            error: function (data) {
-                alert("ajax请求失败"+data.msg);
+                //如果是点击第五个索引则全部索引加一,方法为获取当前页码值+2。再循环减一
+                else if (currentPageIndex - firstPageIndex == 4 && currentPageIndex != maxPageIndex) {
+                    var addedNum = currentPageIndex + 2;
+                    for (var i = 5; i > 0; i--) {
+                        document.getElementById("pageIndex" + i).innerText = --addedNum;
+                    }
+                    currentPage = document.getElementById("pageIndex5").innerText;
+                    //document.getElementById("txt").innerHTML=document.getElementById("pageIndex5").innerText;
+                }
+                else if(currentPageIndex==maxPageIndex)
+                    currentPage=maxPageIndex;
             }
-        })
-	}
+
+            //左移符右移符情况
+            else {
+                if (getMSG == "<<") {
+                    for (var i = 1; i <= 5; i++) {
+                        document.getElementById("pageIndex" + i).innerText = String(i);
+                    }
+                    currentPage = 1;
+                } else if (getMSG == ">>") {
+                    var prev = maxPageIndex;
+                    for (var i = 5; i > 0; i--) {
+                        document.getElementById("pageIndex" + i).innerText = String(prev--);
+                    }
+                    //document.getElementById("txt").innerText=maxPageIndex;
+                    currentPage = maxPageIndex;
+                }else if(getMSG == "MAX->"){
+
+                }
+
+            }
+
+
+            //获取需要替换部分的html内容，并且去除所有空格符
+            //alert("Ajax开始,获取到的页码数据为" + currentPage)
+            $.ajax({
+                ansyc: false,//是否异步发送
+                type: "POST",
+                url: "/controller/getVideoInfo",//指向loginCheck处理器
+                data: {"pageIndex": currentPage},//目标url
+                dataType: "json",
+                success: function (data) {
+                    if (data.msg != null) {
+                        for (var i = 1; i <= 15; i++) {
+                            //清空原内容，添加进去新内容
+                            var title = document.getElementById("font_h" + i).innerHTML;//.trim().replace(/\s/g, "")
+                            document.getElementById("font_h" + i).innerHTML = title.replace(title, data.msg[i].videoname)
+
+                            var rest = document.getElementById("text_p" + i).innerHTML;//.trim().replace(/\s/g, "")
+                            document.getElementById("text_p" + i).innerHTML = rest.replace(rest, "时长：" + data.msg[i].videolength + "<br>" +
+                                "作者：" + data.msg[i].videoproducer + "<br>" +
+                                "描述：" + data.msg[i].videodescribe)
+
+							document.getElementById("pic"+i).src="img/"+i+".jpg"
+                        }
+                    } else
+                        alert("ajax请求成功但是链接出现了问题" + data.msg);
+                },
+                error: function (data) {
+                    alert("ajax请求失败" + data.msg);
+                }
+            })
+
+
+        }
+    }
+
+
 </script>
 
 
@@ -245,7 +299,14 @@
 
 
 			</div>
-			<button class="btn btn-block btn-success" type="button" id="test_sub" onclick="printMsg()">按钮</button>
+
+
+            <!--按钮按钮-->
+			<button class="btn btn-block btn-success" type="button" id="test_sub"
+                    onclick="printMsg()">按钮</button>
+            <!--按钮按钮-->
+
+
 		</div>
 
 
@@ -307,7 +368,7 @@
 			<div class="row-fluid">
 				<div class="span4">
 					<div class="media">
-						<a href="404.html" class="pull-left"><img src="img/3.jpg"  width="150" class="media-object" alt='' /></a>
+						<a href="#" class="pull-left"><img src="img/3.jpg" id="pic1" width="150" class="media-object" alt='' /></a>
 						<div class="media-body">
 							<font color="white">
 								<h4 class="media-heading" id="font_h1">
@@ -322,7 +383,7 @@
 				</div>
 				<div class="span4">
 					<div class="media">
-						<a href="#" class="pull-left"><img src="img/3.jpg"  width="150" class="media-object" alt='' /></a>
+						<a href="#" class="pull-left"><img src="img/3.jpg"  id="pic2" width="150" class="media-object" alt='' /></a>
 						<div class="media-body">
 							<font color="white">
 								<h4 class="media-heading" id="font_h2">
@@ -337,7 +398,7 @@
 				</div>
 				<div class="span4">
 					<div class="media">
-						<a href="#" class="pull-left"><img src="img/3.jpg"  width="150" class="media-object" alt='' /></a>
+						<a href="#" class="pull-left"><img src="img/3.jpg"  id="pic3" width="150" class="media-object" alt='' /></a>
 						<div class="media-body">
 							<font color="white">
 								<h4 class="media-heading" id="font_h3">
@@ -362,7 +423,7 @@
 			<div class="row-fluid">
 				<div class="span4">
 					<div class="media">
-						<a href="#" class="pull-left"><img src="img/3.jpg"  width="150" class="media-object" alt='' /></a>
+						<a href="#" class="pull-left"><img src="img/3.jpg"  id="pic4" width="150" class="media-object" alt='' /></a>
 						<div class="media-body">
 							<font color="white">
 								<h4 class="media-heading" id="font_h4">
@@ -377,7 +438,7 @@
 				</div>
 				<div class="span4">
 					<div class="media">
-						<a href="#" class="pull-left"><img src="img/3.jpg"  width="150" class="media-object" alt='' /></a>
+						<a href="#" class="pull-left"><img src="img/3.jpg" id="pic5" width="150" class="media-object" alt='' /></a>
 						<div class="media-body">
 							<font color="white">
 								<h4 class="media-heading" id="font_h5">
@@ -392,7 +453,7 @@
 				</div>
 				<div class="span4">
 					<div class="media">
-						<a href="#" class="pull-left"><img src="img/3.jpg"  width="150" class="media-object" alt='' /></a>
+						<a href="#" class="pull-left"><img src="img/3.jpg" id="pic6"  width="150" class="media-object" alt='' /></a>
 						<div class="media-body">
 							<font color="white">
 								<h4 class="media-heading" id="font_h6">
@@ -417,7 +478,7 @@
 			<div class="row-fluid">
 				<div class="span4">
 					<div class="media">
-						<a href="#" class="pull-left"><img src="img/3.jpg"  width="150" class="media-object" alt='' /></a>
+						<a href="#" class="pull-left"><img src="img/3.jpg" id="pic7"  width="150" class="media-object" alt='' /></a>
 						<div class="media-body">
 							<font color="white">
 								<h4 class="media-heading" id="font_h7">
@@ -432,7 +493,7 @@
 				</div>
 				<div class="span4">
 					<div class="media">
-						<a href="#" class="pull-left"><img src="img/3.jpg"  width="150" class="media-object" alt='' /></a>
+						<a href="#" class="pull-left"><img src="img/3.jpg" id="pic8"  width="150" class="media-object" alt='' /></a>
 						<div class="media-body">
 							<font color="white">
 								<h4 class="media-heading" id="font_h8">
@@ -447,7 +508,7 @@
 				</div>
 				<div class="span4">
 					<div class="media">
-						<a href="#" class="pull-left"><img src="img/3.jpg"  width="150" class="media-object" alt='' /></a>
+						<a href="#" class="pull-left"><img src="img/3.jpg"  id="pic9" width="150" class="media-object" alt='' /></a>
 						<div class="media-body">
 							<font color="white">
 								<h4 class="media-heading" id="font_h9">
@@ -472,7 +533,7 @@
 			<div class="row-fluid">
 				<div class="span4">
 					<div class="media">
-						<a href="#" class="pull-left"><img src="img/3.jpg"  width="150" class="media-object" alt='' /></a>
+						<a href="#" class="pull-left"><img src="img/3.jpg" id="pic10"  width="150" class="media-object" alt='' /></a>
 						<div class="media-body">
 							<font color="white">
 								<h4 class="media-heading" id="font_h10">
@@ -487,7 +548,7 @@
 				</div>
 				<div class="span4">
 					<div class="media">
-						<a href="#" class="pull-left"><img src="img/3.jpg"  width="150" class="media-object" alt='' /></a>
+						<a href="#" class="pull-left"><img src="img/3.jpg"  id="pic11" width="150" class="media-object" alt='' /></a>
 						<div class="media-body">
 							<font color="white">
 								<h4 class="media-heading" id="font_h11">
@@ -502,7 +563,7 @@
 				</div>
 				<div class="span4">
 					<div class="media">
-						<a href="#" class="pull-left"><img src="img/3.jpg"  width="150" class="media-object" alt='' /></a>
+						<a href="#" class="pull-left"><img src="img/3.jpg" id="pic12"  width="150" class="media-object" alt='' /></a>
 						<div class="media-body">
 							<font color="white">
 								<h4 class="media-heading" id="font_h12">
@@ -527,7 +588,7 @@
 			<div class="row-fluid">
 				<div class="span4">
 					<div class="media">
-						<a href="#" class="pull-left"><img src="img/3.jpg"  width="150" class="media-object" alt='' /></a>
+						<a href="#" class="pull-left"><img src="img/3.jpg"  id="pic13" width="150" class="media-object" alt='' /></a>
 						<div class="media-body">
 							<font color="white">
 								<h4 class="media-heading" id="font_h13">
@@ -542,7 +603,7 @@
 				</div>
 				<div class="span4">
 					<div class="media">
-						<a href="#" class="pull-left"><img src="img/3.jpg"  width="150" class="media-object" alt='' /></a>
+						<a href="#" class="pull-left"><img src="img/3.jpg"  id="pic14" width="150" class="media-object" alt='' /></a>
 						<div class="media-body">
 							<font color="white">
 								<h4 class="media-heading" id="font_h14">
@@ -557,7 +618,7 @@
 				</div>
 				<div class="span4">
 					<div class="media">
-						<a href="#" class="pull-left"><img src="img/3.jpg"  width="150" class="media-object" alt='' /></a>
+						<a href="#" class="pull-left"><img src="img/3.jpg" id="pic15"  width="150" class="media-object" alt='' /></a>
 						<div class="media-body">
 							<font color="white">
 								<h4 class="media-heading" id="font_h15">
@@ -576,27 +637,35 @@
 			<div class="row-fluid">
 				<div class="span12">
 					<div class="pagination pagination-centered">
-						<ul>
+						<ul id="myul">
 							<li>
-								<a href="#">上一页</a>
+								<a href="#"><<</a>
+							</li>
+
+							<li>
+								<a href="#" id="pageIndex1">1</a>
 							</li>
 							<li>
-								<a href="#">1</a>
+								<a href="#" id="pageIndex2">2</a>
 							</li>
 							<li>
-								<a href="#">2</a>
+								<a href="#" id="pageIndex3">3</a>
 							</li>
 							<li>
-								<a href="#">3</a>
+								<a href="#" id="pageIndex4">4</a>
 							</li>
 							<li>
-								<a href="#">4</a>
+								<a href="#" id="pageIndex5">5</a>
 							</li>
 							<li>
-								<a href="#">5</a>
+								<a href="#">MAX-></a>
 							</li>
 							<li>
-								<a href="#">下一页</a>
+								<a href="#" id="MaxNum">99</a>
+							</li>
+
+							<li>
+								<a href="#">>></a>
 							</li>
 						</ul>
 					</div>
