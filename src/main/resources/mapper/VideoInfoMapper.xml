@@ -3,13 +3,13 @@
 <mapper namespace="com.example.testspringboot.dao.VideoInfoMapper" >
   <resultMap id="BaseResultMap" type="com.example.testspringboot.entiy.VideoInfo" >
     <id column="id" property="id" jdbcType="INTEGER" />
-    <result column="VideoName" property="videoname" jdbcType="VARCHAR" />
-    <result column="VideoLength" property="videolength" jdbcType="TIME" />
-    <result column="VideoProducer" property="videoproducer" jdbcType="VARCHAR" />
-    <result column="VideoDescribe" property="videodescribe" jdbcType="VARCHAR" />
+    <result column="videoName" property="videoname" jdbcType="VARCHAR" />
+    <result column="videoLength" property="videolength" jdbcType="TIME" />
+    <result column="videoProducer" property="videoproducer" jdbcType="VARCHAR" />
+    <result column="videoDescribe" property="videodescribe" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, VideoName, VideoLength, VideoProducer, VideoDescribe
+    id, videoName, videoLength, videoProducer, videoDescribe
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
@@ -22,8 +22,8 @@
     where id = #{id,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.example.testspringboot.entiy.VideoInfo" >
-    insert into video_info (id, VideoName, VideoLength, 
-      VideoProducer, VideoDescribe)
+    insert into video_info (id, videoName, videoLength, 
+      videoProducer, videoDescribe)
     values (#{id,jdbcType=INTEGER}, #{videoname,jdbcType=VARCHAR}, #{videolength,jdbcType=TIME}, 
       #{videoproducer,jdbcType=VARCHAR}, #{videodescribe,jdbcType=VARCHAR})
   </insert>
@@ -34,16 +34,16 @@
         id,
       </if>
       <if test="videoname != null" >
-        VideoName,
+        videoName,
       </if>
       <if test="videolength != null" >
-        VideoLength,
+        videoLength,
       </if>
       <if test="videoproducer != null" >
-        VideoProducer,
+        videoProducer,
       </if>
       <if test="videodescribe != null" >
-        VideoDescribe,
+        videoDescribe,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
@@ -68,33 +68,32 @@
     update video_info
     <set >
       <if test="videoname != null" >
-        VideoName = #{videoname,jdbcType=VARCHAR},
+        videoName = #{videoname,jdbcType=VARCHAR},
       </if>
       <if test="videolength != null" >
-        VideoLength = #{videolength,jdbcType=TIME},
+        videoLength = #{videolength,jdbcType=TIME},
       </if>
       <if test="videoproducer != null" >
-        VideoProducer = #{videoproducer,jdbcType=VARCHAR},
+        videoProducer = #{videoproducer,jdbcType=VARCHAR},
       </if>
       <if test="videodescribe != null" >
-        VideoDescribe = #{videodescribe,jdbcType=VARCHAR},
+        videoDescribe = #{videodescribe,jdbcType=VARCHAR},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.example.testspringboot.entiy.VideoInfo" >
     update video_info
-    set VideoName = #{videoname,jdbcType=VARCHAR},
-      VideoLength = #{videolength,jdbcType=TIME},
-      VideoProducer = #{videoproducer,jdbcType=VARCHAR},
-      VideoDescribe = #{videodescribe,jdbcType=VARCHAR}
+    set videoName = #{videoname,jdbcType=VARCHAR},
+      videoLength = #{videolength,jdbcType=TIME},
+      videoProducer = #{videoproducer,jdbcType=VARCHAR},
+      videoDescribe = #{videodescribe,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
-
   <insert id="insertList" parameterType="java.util.List">
-    insert into video_info (videoname,videolength,videoproducer,videodescribe) values
+    insert into video_info (videoName,videoLength,videoProducer,videoDescribe) values
     <foreach collection="list" item="item" separator=",">
-      <!--这个list小写-->
+      <!--这个list小写,下面的四个数据也得小写，坑-->
       (
       #{item.videoname},
       #{item.videolength},

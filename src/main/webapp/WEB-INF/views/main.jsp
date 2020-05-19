@@ -102,12 +102,12 @@
                         for (var i = 1; i <= 15; i++) {
                             //清空原内容，添加进去新内容
                             var title = document.getElementById("font_h" + i).innerHTML;//.trim().replace(/\s/g, "")
-                            document.getElementById("font_h" + i).innerHTML = title.replace(title, data.msg[i].videoname)
+                            document.getElementById("font_h" + i).innerHTML = title.replace(title, data.msg[i].videoName)
 
                             var rest = document.getElementById("text_p" + i).innerHTML;//.trim().replace(/\s/g, "")
-                            document.getElementById("text_p" + i).innerHTML = rest.replace(rest, "时长：" + data.msg[i].videolength + "<br>" +
-                                "作者：" + data.msg[i].videoproducer + "<br>" +
-                                "描述：" + data.msg[i].videodescribe)
+                            document.getElementById("text_p" + i).innerHTML = rest.replace(rest, "时长：" + data.msg[i].videoLength + "<br>" +
+                                "作者：" + data.msg[i].videoProducer + "<br>" +
+                                "描述：" + data.msg[i].videoDescribe)
 
 							document.getElementById("pic"+i).src="img/"+i+".jpg"
                         }

@@ -31,8 +31,8 @@ public class GetVideoInfo {
     @ResponseBody
     @RequestMapping(value = "/getVideoInfo",method = RequestMethod.POST)
     public Map<String,Object> map(
-            @RequestParam(value = "pageIndex",required = true) int pageIndex){
-        //System.out.println("Ajax到达1,索引值："+pageIndex);
+            @RequestParam(value = "pageIndex",required = false) int pageIndex){
+        System.out.println("Ajax到达1,索引值："+pageIndex);
         //存储键值数据
         int beilvNumber=15;//1-15   16-30   31-45
         Map<String,Object> map=new HashMap<>();

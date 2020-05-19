@@ -1,9 +1,7 @@
 package com.example.testspringboot.entiy;
 
-import org.apache.ibatis.annotations.Mapper;
-
 import java.util.Date;
-@Mapper
+
 public class VideoInfo {
     private Integer id;
 

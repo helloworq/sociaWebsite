@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.testspringboot.dao.UserMomentsInfoMapper" >
+  <resultMap id="BaseResultMap" type="com.example.testspringboot.entiy.UserMomentsInfo" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="picUrl" property="picurl" jdbcType="VARCHAR" />
+    <result column="userNickName" property="usernickname" jdbcType="VARCHAR" />
+    <result column="userRealName" property="userrealname" jdbcType="VARCHAR" />
+    <result column="content" property="content" jdbcType="VARCHAR" />
+    <result column="collect" property="collect" jdbcType="INTEGER" />
+    <result column="share" property="share" jdbcType="INTEGER" />
+    <result column="comment" property="comment" jdbcType="INTEGER" />
+    <result column="likes" property="likes" jdbcType="INTEGER" />
+    <result column="sendTime" property="sendtime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, picUrl, userNickName, userRealName, content, collect, share, comment, likes, 
+    sendTime
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from user_moments_info
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from user_moments_info
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.example.testspringboot.entiy.UserMomentsInfo" >
+    insert into user_moments_info (id, picUrl, userNickName, 
+      userRealName, content, collect, 
+      share, comment, likes, 
+      sendTime)
+    values (#{id,jdbcType=INTEGER}, #{picurl,jdbcType=VARCHAR}, #{usernickname,jdbcType=VARCHAR}, 
+      #{userrealname,jdbcType=VARCHAR}, #{content,jdbcType=VARCHAR}, #{collect,jdbcType=INTEGER}, 
+      #{share,jdbcType=INTEGER}, #{comment,jdbcType=INTEGER}, #{likes,jdbcType=INTEGER}, 
+      #{sendtime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.example.testspringboot.entiy.UserMomentsInfo" >
+    insert into user_moments_info
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="picurl != null" >
+        picUrl,
+      </if>
+      <if test="usernickname != null" >
+        userNickName,
+      </if>
+      <if test="userrealname != null" >
+        userRealName,
+      </if>
+      <if test="content != null" >
+        content,
+      </if>
+      <if test="collect != null" >
+        collect,
+      </if>
+      <if test="share != null" >
+        share,
+      </if>
+      <if test="comment != null" >
+        comment,
+      </if>
+      <if test="likes != null" >
+        likes,
+      </if>
+      <if test="sendtime != null" >
+        sendTime,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="picurl != null" >
+        #{picurl,jdbcType=VARCHAR},
+      </if>
+      <if test="usernickname != null" >
+        #{usernickname,jdbcType=VARCHAR},
+      </if>
+      <if test="userrealname != null" >
+        #{userrealname,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null" >
+        #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="collect != null" >
+        #{collect,jdbcType=INTEGER},
+      </if>
+      <if test="share != null" >
+        #{share,jdbcType=INTEGER},
+      </if>
+      <if test="comment != null" >
+        #{comment,jdbcType=INTEGER},
+      </if>
+      <if test="likes != null" >
+        #{likes,jdbcType=INTEGER},
+      </if>
+      <if test="sendtime != null" >
+        #{sendtime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.example.testspringboot.entiy.UserMomentsInfo" >
+    update user_moments_info
+    <set >
+      <if test="picurl != null" >
+        picUrl = #{picurl,jdbcType=VARCHAR},
+      </if>
+      <if test="usernickname != null" >
+        userNickName = #{usernickname,jdbcType=VARCHAR},
+      </if>
+      <if test="userrealname != null" >
+        userRealName = #{userrealname,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null" >
+        content = #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="collect != null" >
+        collect = #{collect,jdbcType=INTEGER},
+      </if>
+      <if test="share != null" >
+        share = #{share,jdbcType=INTEGER},
+      </if>
+      <if test="comment != null" >
+        comment = #{comment,jdbcType=INTEGER},
+      </if>
+      <if test="likes != null" >
+        likes = #{likes,jdbcType=INTEGER},
+      </if>
+      <if test="sendtime != null" >
+        sendTime = #{sendtime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.example.testspringboot.entiy.UserMomentsInfo" >
+    update user_moments_info
+    set picUrl = #{picurl,jdbcType=VARCHAR},
+      userNickName = #{usernickname,jdbcType=VARCHAR},
+      userRealName = #{userrealname,jdbcType=VARCHAR},
+      content = #{content,jdbcType=VARCHAR},
+      collect = #{collect,jdbcType=INTEGER},
+      share = #{share,jdbcType=INTEGER},
+      comment = #{comment,jdbcType=INTEGER},
+      likes = #{likes,jdbcType=INTEGER},
+      sendTime = #{sendtime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <insert id="insertList" parameterType="java.util.List">
+    insert into user_moments_info(id, picUrl, userNickName, userRealName,
+    content, collect, share, comment, likes, sendTime) values
+    <foreach collection="list" item="item" separator="," >
+      (
+      #{item.id},
+      #{item.picurl},
+      #{item.usernickname},
+      #{item.userrealname},
+      #{item.content},
+      #{item.collect},
+      #{item.share},
+      #{item.comment},
+      #{item.likes},
+      #{item.sendtime}
+      )
+    </foreach>
+  </insert>
+  <select id="selectFriendsInfoByfriendName" resultType="com.example.testspringboot.entiy.UserMomentsInfo">
+        select * from user_moments_info
+        where userNickName in
+         (select friendname from user_relation where username=#{userName,jdbcType=VARCHAR})
+         limit #{page,jdbcType=INTEGER},15
+  </select>
+
+  <select id="selectByfriendNameofCount" parameterType="java.lang.String" resultType="java.lang.Integer">
+        select count(*) from user_moments_info
+        where userNickName in
+         (select friendname from user_relation where username=#{userName})
+
+  </select>
+</mapper>
