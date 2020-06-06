@@ -4,6 +4,7 @@ import com.example.testspringboot.entiy.UserRelation;
 import com.example.testspringboot.entiy.friendChartEntiy;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -27,4 +28,7 @@ public interface UserRelationMapper {
 
     @Delete("delete from user_relation where username=#{username} and friendname=#{friendname}")
     int deleteBySelectFriendNameAndUserName(String username,String friendname);
+
+    @Select("select friendname from user_relation where username=#{name}")
+    ArrayList<String> followFriend(String name);
 }

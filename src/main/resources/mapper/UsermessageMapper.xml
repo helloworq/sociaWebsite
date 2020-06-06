@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.testspringboot.dao.UsermessageMapper" >
+  <resultMap id="BaseResultMap" type="com.example.testspringboot.entiy.Usermessage" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="messagecontent" property="messagecontent" jdbcType="INTEGER" />
+    <result column="time" property="time" jdbcType="TIMESTAMP" />
+    <result column="whomessage" property="whomessage" jdbcType="VARCHAR" />
+    <result column="messagetowho" property="messagetowho" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, messagecontent, time, whomessage, messagetowho
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from usermessage
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from usermessage
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.example.testspringboot.entiy.Usermessage" >
+    insert into usermessage (id, messagecontent, time, 
+      whomessage, messagetowho)
+    values (#{id,jdbcType=INTEGER}, #{messagecontent,jdbcType=INTEGER}, #{time,jdbcType=TIMESTAMP}, 
+      #{whomessage,jdbcType=VARCHAR}, #{messagetowho,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.example.testspringboot.entiy.Usermessage" >
+    insert into usermessage
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="messagecontent != null" >
+        messagecontent,
+      </if>
+      <if test="time != null" >
+        time,
+      </if>
+      <if test="whomessage != null" >
+        whomessage,
+      </if>
+      <if test="messagetowho != null" >
+        messagetowho,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="messagecontent != null" >
+        #{messagecontent,jdbcType=INTEGER},
+      </if>
+      <if test="time != null" >
+        #{time,jdbcType=TIMESTAMP},
+      </if>
+      <if test="whomessage != null" >
+        #{whomessage,jdbcType=VARCHAR},
+      </if>
+      <if test="messagetowho != null" >
+        #{messagetowho,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.example.testspringboot.entiy.Usermessage" >
+    update usermessage
+    <set >
+      <if test="messagecontent != null" >
+        messagecontent = #{messagecontent,jdbcType=INTEGER},
+      </if>
+      <if test="time != null" >
+        time = #{time,jdbcType=TIMESTAMP},
+      </if>
+      <if test="whomessage != null" >
+        whomessage = #{whomessage,jdbcType=VARCHAR},
+      </if>
+      <if test="messagetowho != null" >
+        messagetowho = #{messagetowho,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.example.testspringboot.entiy.Usermessage" >
+    update usermessage
+    set messagecontent = #{messagecontent,jdbcType=INTEGER},
+      time = #{time,jdbcType=TIMESTAMP},
+      whomessage = #{whomessage,jdbcType=VARCHAR},
+      messagetowho = #{messagetowho,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

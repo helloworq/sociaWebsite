@@ -5,6 +5,9 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Repository;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+
 @Repository
 @Mapper
 public interface UserInfoMapper {
@@ -25,4 +28,13 @@ public interface UserInfoMapper {
 
     @Select("select userHeadUrl from user_info where userNickName =#{userNickName}")
     String getUserHeadUrl(String userNickName);
+
+    @Select("select * from user_info where usernickname=#{username}")
+    UserInfo selectByUsername(String username);
+
+    @Select("select count(*) from user_info where usernickname=#{usernickname}")
+    int isFriendExist(String usernickname);
+
+    @Select("select * from user_info where usernickname=#{usernickname}")
+    UserInfo getSearchInfo(String usernickname);
 }

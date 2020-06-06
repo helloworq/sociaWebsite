@@ -1,8 +1,8 @@
 <%--
   Created by IntelliJ IDEA.
   User: 12733
-  Date: 2020/3/30
-  Time: 1:19
+  Date: 2020/5/29
+  Time: 10:06
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
@@ -119,8 +119,8 @@
         <!-- 头部区域（可配合layui已有的水平导航） -->
         <ul class="layui-nav layui-layout-right">
             <li class="layui-nav-item">
-                <a href="javascript:;" id="rightName">
-                    <img src="/img/5050.jpg" class="layui-nav-img" id="rightIcon">
+                <a href="javascript:;">
+                    <img src="http://t.cn/RCzsdCq" class="layui-nav-img">
                     贤心
                 </a>
                 <dl class="layui-nav-child">
@@ -185,29 +185,29 @@
         <!-- 内容主体区域 -->
         <div class="layui-row">
             <div class="layui-col-xs9">
-                    <div id="Pl_Official_Headerv6__1">
-                        <div class="PCD_header">
-                            <div class="pf_wrap">
-                                <div class="cover_wrap banner_transition" style="background-image:url(//img.t.sinajs.cn/t5/skin/public/profile_cover/001.jpg)" cover-type="1">
+                <div id="Pl_Official_Headerv6__1">
+                    <div class="PCD_header">
+                        <div class="pf_wrap">
+                            <div class="cover_wrap banner_transition" style="background-image:url(//img.t.sinajs.cn/t5/skin/public/profile_cover/001.jpg)" cover-type="1">
+                            </div>
+                            <div class="shadow  S_shadow">
+                                <div class="pf_photo">
+                                    <p class="photo_wrap">
+                                        <a href="" title="更换头像">
+                                            <img src="/img/5050.jpg" class="photo">
+                                        </a>
+                                    </p>
                                 </div>
-                                <div class="shadow  S_shadow">
-                                    <div class="pf_photo">
-                                        <p class="photo_wrap">
-                                            <a href="" title="更换头像">
-                                                <img src="/img/5050.jpg" class="photo">
-                                            </a>
-                                        </p>
-                                    </div>
-                                    <div class="pf_username">
-                                        <h1 class="username" id="myName"></h1>
-                                    </div>
-                                    <div class="pf_intro">
-                                        <a class="tlink" href="">一句话介绍一下自己吧，让别人更了解你</a>
-                                    </div>
+                                <div class="pf_username">
+                                    <h1 class="username" id="myName"></h1>
+                                </div>
+                                <div class="pf_intro">
+                                    <a class="tlink" href="">一句话介绍一下自己吧，让别人更了解你</a>
                                 </div>
                             </div>
                         </div>
                     </div>
+                </div>
 
 
                 <div style="padding: 15px;"><!--显示流加载内容-->
@@ -219,6 +219,7 @@
             <div class="layui-col-xs3">
                 <div id="test2" style="margin: auto;left: 0;right: 0;top: 0;bottom: 0"></div>
             </div>
+
 
         </div>
     </div>
@@ -321,68 +322,69 @@
     }
 </style>
 <script>
+    //点击用户名字的时候都往这个页面跳转，显示用户的信息
+    $(document).ready(function() {
+        //alert(decodeURI(window.location.href).split("=")[1])
+        layui.use('flow', function(){
+            var getnamefromurl=decodeURI(window.location.href).split("=")[1];
+            //alert("原始URL："+url+"   处理后数据："+url.split("=")[1])
+            var flow = layui.flow;
+            flow.load({
+                elem: '#LAY_demo1' //流加载容器
+                ,scrollElem: '#LAY_demo1' //滚动条所在元素，一般不用填，此处只是演示需要。
+                ,isAuto:true
+                ,done: function(page, next){ //执行下一页的回调
+                    setTimeout(function(){
+                        var lis = [];
+                        $.get("/controller/get_info_list_personalInfo_of_PersonInfo?page="+page+"&username="+getnamefromurl, function(res){
+                            //假设你的列表返回在data集合中
+                            //alert("进入控制器")
+                            document.getElementById("myName").innerText=res.myName;
+                            layui.each(res.data, function(index, item){
+                                lis.push('<li>'+item.id+'</li>'+
+                                    '           <li><div class="card-wrap" style="height: 250px;width:100%;overflow:auto;">\n' +
+                                    '                <div class="card">\n' +
+                                    '                    <div class="card-feed">\n' +
+                                    '                        <div class="avator"><img src="'+item.picurl+'">\n' +
+                                    '                        </div>\n' +
+                                    '                        <!--微博内容-->\n' +
+                                    '                        <div class="content" node-type="like">\n' +
+                                    '                            <div class="info">\n' +
+                                    '                                <div>\n' +
+                                    '                                    <a href="" class="name"  nick-name="隔夜饭馊特了" >'
+                                    +item.usernickname+'</a>\n' +
+                                    '                                </div>\n' +
+                                    '                            </div>\n' +
+                                    '                            <p class="txt" node-type="feed_list_content" nick-name="隔夜饭馊特了">'+
+                                    item.content+'</p>\n' +
+                                    '                            <p class="from"><!--a >今天 19:36 转赞人数超过40</a--></p>\n' +
+                                    '                        </div>\n' +
+                                    '                        <!--/微博内容-->\n' +
+                                    '                    </div>\n' +
+                                    '                    <div class="card-act">\n' +
+                                    '                        <ul>\n' +
+                                    '                            <li><a >收藏 '+item.collect+'</a></li>\n' +
+                                    '                            <li><a >转发 '+item.share+'</a></li>\n' +
+                                    '                            <li><a id="'+item.id+'" onclick="loadComment(this.id)">评论 '+item.comment+'</a></li>\n' +
+                                    '                            <li><a ><i class="icon-act icon-act-praise"></i> <em>赞 '+item.likes+
+                                    '</em></a></li>\n' +
+                                    '                        </ul>\n' +
+                                    '                    </div>\n' +
+                                    '                    <div node-type="feed_list_repeat"></div>\n' +
+                                    '                </div>\n' +
+                                    '            </div></li>'
+                                );
 
-    layui.use('flow', function(){
-        var flow = layui.flow;
-        flow.load({
-            elem: '#LAY_demo1' //流加载容器
-            ,scrollElem: '#LAY_demo1' //滚动条所在元素，一般不用填，此处只是演示需要。
-            ,isAuto:true
-            ,done: function(page, next){ //执行下一页的回调
-                setTimeout(function(){
-                    var lis = [];
-                    $.get("/controller/get_info_list_personalInfo?page="+page, function(res){
-                        //假设你的列表返回在data集合中
-                        //alert("进入控制器")
-                        document.getElementById("myName").innerText=res.myName;
-                        layui.each(res.data, function(index, item){
-                            lis.push('<li>'+item.id+'</li>'+
-                                '           <li><div class="card-wrap" style="height: 250px;width:100%;overflow:auto;">\n' +
-                                '                <div class="card">\n' +
-                                '                    <div class="card-feed">\n' +
-                                '                        <div class="avator"><img src="'+item.picurl+'">\n' +
-                                '                        </div>\n' +
-                                '                        <!--微博内容-->\n' +
-                                '                        <div class="content" node-type="like">\n' +
-                                '                            <div class="info">\n' +
-                                '                                <div>\n' +
-                                '                                    <a href="" class="name"  nick-name="隔夜饭馊特了" >'
-                                +item.usernickname+'</a>\n' +
-                                '                                </div>\n' +
-                                '                            </div>\n' +
-                                '                            <p class="txt" node-type="feed_list_content" nick-name="隔夜饭馊特了">'+
-                                item.content+'</p>\n' +
-                                '                            <p class="from"><!--a >今天 19:36 转赞人数超过40</a--></p>\n' +
-                                '                        </div>\n' +
-                                '                        <!--/微博内容-->\n' +
-                                '                    </div>\n' +
-                                '                    <div class="card-act">\n' +
-                                '                        <ul>\n' +
-                                '                            <li><a >收藏 '+item.collect+'</a></li>\n' +
-                                '                            <li><a id="'+item.id+'" onclick="loadComment(this.id)">评论 '+item.comment+'</a></li>\n' +
-                                '                            <li><a ><i class="icon-act icon-act-praise"></i> <em>赞 '+item.likes+
-                                '</em></a></li>\n' +
-                                '                        </ul>\n' +
-                                '                    </div>\n' +
-                                '                    <div node-type="feed_list_repeat"></div>\n' +
-                                '                </div>\n' +
-                                '            </div></li>'
-                            );
-                            //修改头像链接
-                            $("#rightIcon").attr("src",item.picurl);
-                            //修改用户名
-                            $("#rightName").html($("#rightName").html().replace("贤心",res.myName))
+                            });
+                            //执行下一页渲染，第二参数为：满足“加载更多”的条件，即后面仍有分页
+                            //pages为Ajax返回的总页数，只有当前页小于总页数的情况下，才会继续出现加载更多
+                            next(lis.join(''), page < 100); //假设总页数为 10
                         });
-                        //执行下一页渲染，第二参数为：满足“加载更多”的条件，即后面仍有分页
-                        //pages为Ajax返回的总页数，只有当前页小于总页数的情况下，才会继续出现加载更多
-                        next(lis.join(''), page < 100); //假设总页数为 10
                     });
-                });
-            }
+                }
+            });
         });
-    });
-
-
+    })
 
     var receviedCommentID;
     function loadComment(id) {
@@ -458,8 +460,13 @@
         });
     }
 
-
-
+/*
+    $(document).ready(function() {
+        //http://localhost:8080/userPage?username=汉武帝
+        var url=decodeURI(window.location.href);
+        alert("原始URL："+url+"   处理后数据："+url.split("=")[1])
+    })
+    */
     /*
         layui.use('flow', function(){
             var flow = layui.flow;

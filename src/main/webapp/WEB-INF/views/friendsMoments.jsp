@@ -15,6 +15,7 @@
     <script type="text/javascript" src="js/jquery-2.0.0.min.js"></script>
     <script type="text/javascript" src="/css/layui/layui.js"></script>
     <script type="text/javascript" src="/css/layui/css/modules/laydate/default/laydate.css"></script>
+
 </head>
 
 
@@ -211,23 +212,10 @@
     <div class="layui-header">
         <div class="layui-logo">公考小分队</div>
         <!-- 头部区域（可配合layui已有的水平导航） -->
-        <ul class="layui-nav layui-layout-left">
-            <li class="layui-nav-item"><a href="">个人中心</a></li>
-            <li class="layui-nav-item"><a href="">我的主页</a></li>
-            <li class="layui-nav-item"><a href="">用户</a></li>
-            <li class="layui-nav-item">
-                <a href="javascript:;">其它</a>
-                <dl class="layui-nav-child">
-                    <dd><a href="">邮件管理</a></dd>
-                    <dd><a href="">消息管理</a></dd>
-                    <dd><a href="">授权管理</a></dd>
-                </dl>
-            </li>
-        </ul>
         <ul class="layui-nav layui-layout-right">
             <li class="layui-nav-item">
-                <a href="javascript:;">
-                    <img src="/img/5050.jpg" class="layui-nav-img">
+                <a href="javascript:;" id="rightName">
+                    <img src="/img/5050.jpg" class="layui-nav-img" id="rightIcon">
                     贤心
                 </a>
                 <dl class="layui-nav-child">
@@ -235,7 +223,7 @@
                     <dd><a href="">安全设置</a></dd>
                 </dl>
             </li>
-            <li class="layui-nav-item"><a href="login">退了</a></li>
+            <li class="layui-nav-item"><a href="login">退出</a></li>
         </ul>
     </div>
 
@@ -250,20 +238,21 @@
                         <dd><a href="personalPage">我的动态</a></dd>
                         <dd><a href="myFriends">我的好友</a></dd>
                         <dd><a href="writeMoment">编写动态</a></dd>
-                        <dd><a href="myInfo">我的信息</a></dd>
-                        <dd><a href="myCollect">我的收藏</a></dd>
-                        <dd><a href="userCommentPage">用户评论</a></dd>
                         <!--dd><a href="">超链接</a></dd-->
                     </dl>
                 </li>
-                <li class="layui-nav-item">
-                    <a href="javascript:;">签到打卡</a>
+                <li class="layui-nav-item layui-nav-itemed">
+                    <a href="javascript:;">我的</a>
                     <dl class="layui-nav-child">
-                        <dd><a href="javascript:;">我的签到</a></dd>
+                        <dd><a href="myInfo">我的信息</a></dd>
+                        <dd><a href="myCollect">我的收藏</a></dd>
+                        <dd><a href="userCommentPage">动态管理</a></dd>
+                        <dd><a href="findFriends">搜索好友</a></dd>
+                        <!--dd><a href="javascript:;">我的签到</a></dd>
                         <dd><a href="javascript:;">签到广场</a></dd>
                         <dd><a href="javascript:;">签到记录</a></dd>
                         <dd><a href="javascript:;">打卡排行榜</a></dd>
-                        <!--dd><a href="">超链接</a></dd-->
+                        <dd><a href="">超链接</a></dd-->
                     </dl>
                 </li>
                 <li class="layui-nav-item">
@@ -275,9 +264,9 @@
                     </dl>
                 </li>
                 <li class="layui-nav-item">
-                    <a href="javascript:;">待开发</a>
+                    <a href="javascript:;">留言板</a>
                     <dl class="layui-nav-child">
-                        <dd><a href="javascript:;">待开发</a></dd>
+                        <dd><a href="userMessage">我的留言</a></dd>
                         <dd><a href="javascript:;">待开发</a></dd>
                         <!--dd><a href="">超链接</a></dd-->
                     </dl>
@@ -291,7 +280,9 @@
         <div class="layui-row">
             <div class="layui-col-xs9">
 
-
+                <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+                    <legend>动态——好友动态</legend>
+                </fieldset>
                 <div style="padding: 15px;"><!--显示流加载内容-->
                     <ul id="LAY_demo1" style="height: 100%;overflow:auto;"></ul>
                 </div>
@@ -300,6 +291,10 @@
             <div class="layui-col-xs3"><!--显示日历-->
                 <div id="test2" style="margin: auto;left: 0;right: 0;top: 0;bottom: 0"></div>
             </div>
+
+            <div id="noticeMarker"></div>
+
+
         </div>
     </div>
 
@@ -308,7 +303,7 @@
 
 
 </body>
-<script>
+<script language="JavaScript">
 
     layui.use('flow', function(){
         var flow = layui.flow;
@@ -333,7 +328,7 @@
                                 '                        <div class="content" node-type="like">\n' +
                                 '                            <div class="info">\n' +
                                 '                                <div>\n' +
-                                '                                    <a href="" class="name"  nick-name="隔夜饭馊特了" >'
+                                '                                    <a href="" class="name" onclick="loadUserPage(this)" >'
                                 +item.usernickname+'</a>\n' +
                                 '                                </div>\n' +
                                 '                            </div>\n' +
@@ -345,8 +340,7 @@
                                 '                    </div>\n' +
                                 '                    <div class="card-act">\n' +
                                 '                        <ul>\n' +
-                                '                            <li><a id="'+item.id+'" onclick="loadComment(this.id)">收藏 '+item.collect+'</a></li>\n' +
-                                '                            <li><a id="'+item.id+'" onclick="loadComment(this.id)">转发 '+item.share+'</a></li>\n' +
+                                '                            <li><a id="'+item.id+'" onclick="clickCollect(this.id)">收藏 '+item.collect+'</a></li>\n' +
                                 '                            <li><a id="'+item.id+'" onclick="loadComment(this.id)">评论 '+item.comment+'</a></li>\n' +
                                 '                            <li><a id="'+item.id+'" onclick="clickLikes(this.id)">' +
                                 '<i class="icon-act icon-act-praise"></i> <em>赞 '+item.likes+
@@ -357,7 +351,10 @@
                                 '                </div>\n' +
                                 '            </div></li>'
                             );
-
+                            //修改头像链接
+                            $("#rightIcon").attr("src",item.picurl);
+                            //修改用户名
+                            $("#rightName").html($("#rightName").html().replace("贤心",res.username))
                         });
                         //执行下一页渲染，第二参数为：满足“加载更多”的条件，即后面仍有分页
                         //pages为Ajax返回的总页数，只有当前页小于总页数的情况下，才会继续出现加载更多
@@ -509,53 +506,133 @@
         })
 
     }
-/*
-    layui.use('flow', function(){
-        var flow = layui.flow;
-        flow.load({
-            elem: '#LAY_demo1' //流加载容器
-            ,scrollElem: '#LAY_demo1' //滚动条所在元素，一般不用填，此处只是演示需要。
-            ,isAuto:true
-            ,done: function(page, next){ //执行下一页的回调
-                setTimeout(function(){
-                var lis = [];
-                //模拟数据插入
-                //alert(page)
-                //setTimeout(function(){
-                //  var lis = [];
-                //  for(var i = 0; i < 8; i++){
-                //    lis.push('<li>'+ ( (page-1)*8 + i + 1 ) +'</li>')
-                //  }
 
-                $.get("/controller/layuiTest?page="+page, function(res){
-                    //假设你的列表返回在data集合中
-                    //alert("进入控制器")
-                    layui.each(res.data, function(index, item){
-                        lis.push('<li> <button type="button" class="layui-btn layui-btn-lg layui-btn-normal">'+
-                            item.title
-                            +'</button> </li>');
+
+    var receviedCollectID;
+    function clickCollect(id) {
+        receviedCollectID=id;
+        $.ajax({
+            ansyc: false,//是否异步发送
+            type: "GET",
+            url: "/controller/actionOfCollect",//指向loginCheck处理器
+            data: {"receviedCollectID":receviedCollectID},
+            dataType: "json",
+            success: function (data) {
+                alert("信息："+data.msg)
+                //alert(data.msg==("success"))
+                //alert(data.msg==("fail"))
+                //alert(data.msg.equals("success"))
+                //alert(data.msg.equals("fail"))
+                //操作完成后显示这个，比较好看
+                if(data.msg==("success")) {
+                    layui.use('layer', function () {
+                        var layer = layui.layer;
+                        //icon:0为惊叹号，1为勾。2为叉，3为问号，4为锁，5为不开心
+                        layer.msg('收藏成功！', {icon: 1});
                     });
-                    //执行下一页渲染，第二参数为：满足“加载更多”的条件，即后面仍有分页
-                    //pages为Ajax返回的总页数，只有当前页小于总页数的情况下，才会继续出现加载更多
-                    next(lis.join(''), page < 100); //假设总页数为 10
-                });
+                }
+                else if(data.msg==("fail")){
+                    layui.use('layer', function () {
+                        var layer = layui.layer;
+                        //icon:0为惊叹号，1为勾。2为叉，3为问号，4为锁，5为不开心
+                        layer.msg('收藏失败！你已经收藏过了', {icon: 2});
+                    });
+                }
+            },
+            error: function (data) {
+                alert(data.msg)
+                layui.use('layer', function() {
+                    var layer = layui.layer;
+                    layer.msg('收藏失败！', {icon: 2});
                 });
             }
-        });
-    });
-*/
+        })
+    }
 
-    /*
-      //按屏加载图片
-      flow.lazyimg({
-        elem: '#LAY_demo3 img'
-        ,scrollElem: '#LAY_demo3' //一般不用设置，此处只是演示需要。
-      });
 
-    });
-    */
+
+
+    function loadUserPage(target){
+        //跳转到特定用户专业
+        //获取指定用户名
+        //alert($(target).text());
+        window.open("userPage?username="+encodeURI($(target).text()));
+    }
+
+
+    function cancelFollow(element) {
+        var buttonID=element.id//获取按钮的id值
+        //由于流加载生成的按钮id值和friendName的id值一样所以提取按钮id值后面的序号再组合以获取friendname的id值
+        var friendName=document.getElementById("friendName"+buttonID.split("followBt")[1]).innerText
+
+        alert(friendName)
+
+        $.ajax({
+            ansyc: false,//是否异步发送
+            type: "GET",
+            url: "/controller/cancelFollow",//指向cancelFollow处理器
+            data: {"friendName": friendName},//目标url
+            dataType: "json",
+            success: function (data) {
+                if (data.msg == "success") {
+                    alert("成功取消关注")
+                } else
+                    alert("ajax请求成功但是链接出现了问题" + data.msg);
+            },
+            error: function (data) {
+                alert("ajax请求失败" + data.msg);
+            }
+        })
+
+    }
 
 </script>
+<script>
+    layui.config({
+        base: "/mods/"
+    }).use("mods", function (mods) {
+        //初始化消息组件
+        mods(["layer", "jsanNotice"], function (layer) {
+            const notice = layer.noticeMarker({
+                "elem": "#noticeMarker",
+                "positionX": "right",
+                "positionY": "100px",
+                "lowKey": true,
+                "noticeWindow": {
+                    "type": 1,
+                    "title": "消息",
+                    "classType": {"notice": "通知", "alerted": "预警", "other": "其他"},
+                    "width": "300px",
+                    "height": "720px",
+                    "contentWidth": "80%",
+                    "contentHeight": "65%"
+                }
+            });
 
+            //手动推送新消息，在使用消息组件自带的消息窗口时使用
+            notice.addNews({
+                "lowKey": true,
+                "classTypeId": "notice",
+                "content": [{"title": "【通知】一条来自测试的消息消息消息消息消息消息消息消息消息", "content": "一条来自测试的消息，最多20字，最多20字，最多20字，最多20字，最多20字，最多20字", "date": "2019-07-28 19:30:36", "url": "https://www.baidu.com"},
+                    {"title": "【通知】一条来自测试的消息消息消息消息消息消息消息消息消息", "content": "一条来自测试的消息，最多20字，最多20字，最多20字，最多20字，最多20字，最多20字", "date": "2019-07-28 19:30:36", "url": "https://www.baidu.com"},
+                    {"title": "【通知】一条来自测试的消息消息消息消息消息消息消息消息消息", "content": "一条来自测试的消息，最多20字，最多20字，最多20字，最多20字，最多20字，最多20字", "date": "2019-07-28 19:30:36", "url": "https://www.baidu.com"},
+                    {"title": "【通知】一条来自测试的消息消息消息消息消息消息消息消息消息", "content": "一条来自测试的消息，最多20字，最多20字，最多20字，最多20字，最多20字，最多20字", "date": "2019-07-28 19:30:36", "url": "https://www.baidu.com"},
+                    {"title": "【通知】一条来自测试的消息消息消息消息消息消息消息消息消息", "content": "一条来自测试的消息，最多20字，最多20字，最多20字，最多20字，最多20字，最多20字", "date": "2019-07-28 19:30:36", "url": "https://www.baidu.com"},
+                    {"title": "【通知】一条来自测试的消息消息消息消息消息消息消息消息消息", "content": "一条来自测试的消息，最多20字，最多20字，最多20字，最多20字，最多20字，最多20字", "date": "2019-07-28 19:30:36", "url": "https://www.baidu.com"},
+                    {"title": "【通知】一条来自测试的消息消息消息消息消息消息消息消息消息", "content": "一条来自测试的消息，最多20字，最多20字，最多20字，最多20字，最多20字，最多20字", "date": "2019-07-28 19:30:36", "url": "https://www.baidu.com"},
+                    {"title": "【通知】一条来自测试的消息消息消息消息消息消息消息消息消息", "content": "一条来自测试的消息，最多20字，最多20字，最多20字，最多20字，最多20字，最多20字", "date": "2019-07-28 19:30:36", "url": "https://www.baidu.com"},
+                    {"title": "【通知】一条来自测试的消息消息消息消息消息消息消息消息消息", "content": "一条来自测试的消息，最多20字，最多20字，最多20字，最多20字，最多20字，最多20字", "date": "2019-07-28 19:30:36", "url": "https://www.baidu.com"},
+                    {"title": "【通知】一条来自测试的消息消息消息消息消息消息消息消息消息", "content": "一条来自测试的消息，最多20字，最多20字，最多20字，最多20字，最多20字，最多20字", "date": "2019-07-28 19:30:36", "url": "https://www.baidu.com"},
+                    {"title": "【通知】一条来自测试的消息消息消息消息消息消息消息消息消息", "content": "一条来自测试的消息，最多20字，最多20字，最多20字，最多20字，最多20字，最多20字", "date": "2019-07-28 19:30:36", "url": "https://www.baidu.com"}
+                ]
+            });
+
+            //手动进行消息盒子提醒，通常用于自定义消息窗口的时候使用
+            /*notice.remind({
+                "lowKey": false
+            });*/
+        });
+    });
+</script>
 </html>
 

@@ -117,24 +117,11 @@
     <div class="layui-header">
         <div class="layui-logo">公考小分队</div>
         <!-- 头部区域（可配合layui已有的水平导航） -->
-        <ul class="layui-nav layui-layout-left">
-            <li class="layui-nav-item"><a href="">个人中心</a></li>
-            <li class="layui-nav-item"><a href="">我的主页</a></li>
-            <li class="layui-nav-item"><a href="">用户</a></li>
-            <li class="layui-nav-item">
-                <a href="javascript:;">其它</a>
-                <dl class="layui-nav-child">
-                    <dd><a href="">邮件管理</a></dd>
-                    <dd><a href="">消息管理</a></dd>
-                    <dd><a href="">授权管理</a></dd>
-                </dl>
-            </li>
-        </ul>
         <ul class="layui-nav layui-layout-right">
             <li class="layui-nav-item">
-                <a href="javascript:;">
-                    <img src="http://t.cn/RCzsdCq" class="layui-nav-img">
-                    贤心
+                <a href="javascript:;" id="rightName">
+                    <img src="/img/5050.jpg" class="layui-nav-img" id="rightIcon">
+                    秦始皇
                 </a>
                 <dl class="layui-nav-child">
                     <dd><a href="">基本资料</a></dd>
@@ -156,20 +143,22 @@
                         <dd><a href="personalPage">我的动态</a></dd>
                         <dd><a href="myFriends">我的好友</a></dd>
                         <dd><a href="writeMoment">编写动态</a></dd>
-                        <dd><a href="myInfo">我的信息</a></dd>
-                        <dd><a href="myCollect">我的收藏</a></dd>
-                        <dd><a href="userCommentPage">用户评论</a></dd>
                         <!--dd><a href="">超链接</a></dd-->
                     </dl>
                 </li>
-                <li class="layui-nav-item">
-                    <a href="javascript:;">签到打卡</a>
+                <li class="layui-nav-item layui-nav-itemed">
+                    <a href="javascript:;">我的</a>
                     <dl class="layui-nav-child">
-                        <dd><a href="javascript:;">我的签到</a></dd>
+                        <dd><a href="myInfo">我的信息</a></dd>
+                        <dd><a href="myCollect">我的收藏</a></dd>
+                        <dd><a href="userCommentPage">动态管理</a></dd>
+                        <dd><a href="findFriends">搜索好友</a></dd>
+
+                        <!--dd><a href="javascript:;">我的签到</a></dd>
                         <dd><a href="javascript:;">签到广场</a></dd>
                         <dd><a href="javascript:;">签到记录</a></dd>
                         <dd><a href="javascript:;">打卡排行榜</a></dd>
-                        <!--dd><a href="">超链接</a></dd-->
+                        <dd><a href="">超链接</a></dd-->
                     </dl>
                 </li>
                 <li class="layui-nav-item">
@@ -180,10 +169,10 @@
                         <!--dd><a href="">超链接</a></dd-->
                     </dl>
                 </li>
-                <li class="layui-nav-item">
-                    <a href="javascript:;">待开发</a>
+                <li class="layui-nav-item layui-nav-itemed">
+                    <a href="javascript:;">留言板</a>
                     <dl class="layui-nav-child">
-                        <dd><a href="javascript:;">待开发</a></dd>
+                        <dd><a href="userMessage">我的留言</a></dd>
                         <dd><a href="javascript:;">待开发</a></dd>
                         <!--dd><a href="">超链接</a></dd-->
                     </dl>
@@ -198,16 +187,26 @@
             <div class="layui-col-xs9">
 
 
-
-                <a id="66" onclick="loadComment(this.id)">aaaaa</a>
-
-
-
+        <table class="layui-table" lay-data="{width: 1200, height:580, url:'/controller/get_info_list_table', page:true, id:'demo'}" lay-filter="demo">
+            <thead>
+            <tr>
+                <th lay-data="{type:'checkbox', fixed: 'left'}"></th>
+                <th lay-data="{field:'id', width:80, sort: true, fixed: true}">ID</th>
+                <th lay-data="{field:'usernickname', width:80}">用户昵称</th>
+                <th lay-data="{field:'userrealname', width:80, sort: true}">用户名</th>
+                <th lay-data="{field:'content', width:250, edit:'text'}">动态</th>
+                <th lay-data="{field:'collect', width:80}">收藏</th>
+                <th lay-data="{field:'comment', width:80}">评论</th>
+                <th lay-data="{field:'likes', width:80}">赞</th>
+                <th lay-data="{field:'sendtime', width:125}">发送时间</th>
+                <th lay-data="{field:'limit', title:'动态权限', width:95, templet: '#switchTpl', unresize: true}"></th>
+                <th lay-data="{fixed: 'right', width:178, align:'center', toolbar: '#barDemo'}"></th>
+            </tr>
+            </thead>
+        </table>
 
             </div>
-            <div class="layui-col-xs3"><!--显示日历-->
-                <div id="test2" style="margin: auto;left: 0;right: 0;top: 0;bottom: 0"></div>
-            </div>
+
         </div>
     </div>
 
@@ -218,172 +217,137 @@
 </body>
 <script>
 
-    var text='                <li><div class="card">\n' +
-        '                    <div class="card-feed">\n' +
-        '                        <div class="avator">\n' +
-        '                            <img src="/img/5050.jpg">\n' +
-        '                        </div>\n' +
-        '                        <!--微博内容-->\n' +
-        '                        <div class="content" node-type="like">\n' +
-        '                            <div class="info">\n' +
-        '                                <div>\n' +
-        '                                    <a href="" class="name" nick-name="隔夜饭馊特了">汉武帝</a>\n' +
-        '                                </div>\n' +
-        '                            </div>\n' +
-        '                            <p class="txt" node-type="feed_list_content" nick-name="隔夜饭馊特了">将进酒唐代：李白 君不见黄河之水天上来，奔流到海不复回。君不见高堂明镜悲白发</p>\n' +
-        '                            <p class="from"><!--a >今天 19:36 转赞人数超过40</a--></p>\n' +
-        '                        </div>\n' +
-        '                    </div>\n' +
-        '                </div>' +
-        '</li>';
+    layui.use('table', function() {
+        var table = layui.table
+            ,form = layui.form;
 
-    /*
-    layui.use('layer', function(){
-        var layer = layui.layer;
-
-        //layer.msg('hello');
-        //layer.msg('操作完成！', {icon: 1});
-        layer.open({
-            //layer提供了5种层类型。可传入的值有：
-            //0（信息框，默认）1（页面层）2（iframe层）3（加载层）4（tips层）。
-            //若你采用layer.open({type: 1})方式调用，则type为必填项（信息框除外）
-            type: 1,
-            content: text ,//这里content是一个普通的String
-            area: ['600px', '300px'],//控制长宽
-            shade: [0.8, '#393D49'],//弹窗外区域颜色
-            anim:0//弹窗出现方式
-        });
-
-    });
-     */
-    var receviedCommentID;
-    function loadComment(id) {
-        //alert(id)
-        receviedCommentID=id;
-        //alert(receviedID)
-        layui.use('layer', function () {
-            var layer = layui.layer;
-            //layer.msg('hello');
-            //layer.msg('操作完成！', {icon: 1});
-            layer.open({
-                //layer提供了5种层类型。可传入的值有：
-                //0（信息框，默认）1（页面层）2（iframe层）3（加载层）4（tips层）。
-                //若你采用layer.open({type: 1})方式调用，则type为必填项（信息框除外）
-                type: 1,
-                content:'<textarea placeholder="请输入内容" class="layui-textarea" id="textareaText"></textarea>' +
-                    '<button class="layui-btn" onclick="sendMyComment()">发表我的评论</button>'+
-                    '                <div style="padding: 15px;">\n' +
-                    '                    <ul id="COMMENT" style="height: 100%;overflow:auto;"></ul>\n' +
-                    '                </div>',//这里content是一个普通的String
-                area: ['800px', '500px'],//控制长宽
-                //shade: [0.8, '#393D49'],//弹窗外区域颜色
-                anim: 0,//弹窗出现方式
-                success: function () {
-                    layui.use('flow', function(){
-                        var flow = layui.flow;
-                        flow.load({
-                            elem: '#COMMENT' //流加载容器
-                            ,scrollElem: '#COMMENT' //滚动条所在元素，一般不用填，此处只是演示需要。
-                            ,isAuto:true
-                            ,done: function(page, next){ //执行下一页的回调
-                                setTimeout(function(){
-                                    var lis = [];
-                                    $.get("/controller/get_info_list_friendInfo?page="+page, function(res){
-                                        //假设你的列表返回在data集合中
-                                        //alert("进入控制器")
-                                        layui.each(res.data, function(index, item){
-                                            lis.push(
-                                                '<li>'+item.id+'</li>'+
-                                                '                <li><div class="card">\n' +
-                                                '                    <div class="card-feed">\n' +
-                                                '                        <div class="avator">\n' +
-                                                '                            <img src="/img/5050.jpg">\n' +
-                                                '                        </div>\n' +
-                                                '                        <!--微博内容-->\n' +
-                                                '                        <div class="content" node-type="like">\n' +
-                                                '                            <div class="info">\n' +
-                                                '                                <div>\n' +
-                                                '                                    <a href="" class="name" nick-name="隔夜饭馊特了">'+item.usernickname+'</a>\n' +
-                                                '                                </div>\n' +
-                                                '                            </div>\n' +
-                                                '                            <p class="txt" node-type="feed_list_content" nick-name="隔夜饭馊特了">'+item.content+'</p>\n' +
-                                                '                            <p class="from"><!--a >今天 19:36 转赞人数超过40</a--></p>\n' +
-                                                '                        </div>\n' +
-                                                '                    </div>\n' +
-                                                '                </div>' +
-                                                '</li>'
-                                            );
-
-                                        });
-                                        //执行下一页渲染，第二参数为：满足“加载更多”的条件，即后面仍有分页
-                                        //pages为Ajax返回的总页数，只有当前页小于总页数的情况下，才会继续出现加载更多
-                                        next(lis.join(''), page < res.pages); //假设总页数为 10
-                                    });
-                                });
-                            }
-                        });
+        //监听单元格编辑
+        table.on('edit(demo)', function(obj){
+            var value = obj.value //得到修改后的值
+                ,data = obj.data //得到所在行所有键值
+                ,field = obj.field; //得到字段
+            //layer.msg('[ID: '+ data.id +'] ' + field + ' 字段更改为：'+ value);
+            //监听到修改好将数据更新到动态表里,这个功能和修改赞的功能一样所以放到同一个处理器处理
+            $.ajax({
+                ansyc: false,//是否异步发送
+                type: "POST",
+                url: "/controller/setMoment",//指向loginCheck处理器
+                data: {
+                    "changedContent":obj.value,
+                    "MomentID":data.id
+                },
+                dataType: "json",
+                success: function (data) {
+                    layui.use('layer', function() {
+                        var layer = layui.layer;
+                        //icon:0为惊叹号，1为勾。2为叉，3为问号，4为锁，5为不开心
+                        layer.msg('操作成功！', {icon: 1});
+                    });
+                },
+                error: function (data) {
+                    layui.use('layer', function() {
+                        var layer = layui.layer;
+                        layer.msg('操作失败！', {icon: 2});
                     });
                 }
-            });
-
+            })
         });
-    }
 
 
-
-    function sendMyComment() {
-        //此方法用来上传我的评论
-        alert("文本框值为："+$("#textareaText").val()+" id为："+receviedCommentID)
-
-        $.ajax({
-            ansyc: false,//是否异步发送
-            type: "POST",
-            url: "/controller/actionOfComment",//指向loginCheck处理器
-            data: {
-                   "textareaText"     : $("#textareaText").val(),
-                   "receviedCommentID":receviedCommentID
-            },
-            dataType: "json",
-            success: function (data) {
-                alert("信息："+data.msg)
-                //清除文本框内容
-                $("#textareaText").val("")
-            },
-            error: function (data) {
-                alert(data.msg)
-            }
-        })
-
-    }
-/*
-    layui.use('flow', function(){
-        var flow = layui.flow;
-        flow.load({
-            elem: '#COMMENT' //流加载容器
-            ,scrollElem: '#COMMENT' //滚动条所在元素，一般不用填，此处只是演示需要。
-            ,isAuto:true
-            ,done: function(page, next){ //执行下一页的回调
-                setTimeout(function(){
-                    var lis = [];
-                    $.get("/controller/get_info_list_friendInfo?page="+page, function(res){
-                        //假设你的列表返回在data集合中
-                        //alert("进入控制器")
-                        layui.each(res.data, function(index, item){
-                            lis.push('<li>'+'</li>');
-
-                        });
-                        //执行下一页渲染，第二参数为：满足“加载更多”的条件，即后面仍有分页
-                        //pages为Ajax返回的总页数，只有当前页小于总页数的情况下，才会继续出现加载更多
-                        next(lis.join(''), page < res.pages); //假设总页数为 10
-                    });
+        //监听表格复选框选择
+        table.on('checkbox(demo)', function (obj) {
+            console.log(obj)
+        });
+        //监听工具条
+        //
+        table.on('tool(demo)', function (obj) {
+            var data = obj.data;
+            if (obj.event === 'detail') {
+                layer.msg('ID：' + data.id + ' 的查看操作');
+            } else if (obj.event === 'del') {
+                layer.confirm('真的删除行么', function (index) {
+                    obj.del();
+                    $.ajax({
+                        ansyc: false,//是否异步发送
+                        type: "POST",
+                        url: "/controller/deleteMoment",//指向loginCheck处理器
+                        data: {"MomentID":data.id},
+                        dataType: "json",
+                        success: function (data) {
+                            layui.use('layer', function() {
+                                var layer = layui.layer;
+                                //icon:0为惊叹号，1为勾。2为叉，3为问号，4为锁，5为不开心
+                                layer.msg('删除成功！', {icon: 1});
+                            });
+                        },
+                        error: function (data) {
+                            layui.use('layer', function() {
+                                var layer = layui.layer;
+                                layer.msg('删除失败！', {icon: 2});
+                            });
+                        }
+                    })
+                    layer.close(index);
                 });
             }
         });
-    });
 
- */
+
+
+        $('.demoTable .layui-btn').on('click', function(){
+            var type = $(this).data('type');
+            active[type] ? active[type].call(this) : '';
+        });
+
+
+
+
+        //监听动态权限操作操作
+        form.on('switch(sexDemo)', function(obj){
+            //layer.tips(this.value + ' ' + this.name + '：'+ obj.elem.checked, obj.othis);
+            //alert(obj.elem.checked)//开关状态
+            //alert(this.value)//动态ID
+            //check框控制代码;开放转隐藏传入的值将会是0，反之为1
+            var switchStatus=obj.elem.checked;
+            var MomentID=this.value
+            //alert((switchStatus==true)?1:0)
+            $.ajax({
+                ansyc: false,//是否异步发送
+                type: "GET",
+                url: "/controller/setMomentLimit",//指向loginCheck处理器
+                data: {
+                    "switchStatus":(switchStatus==true)?1:0,
+                    "MomentID":MomentID
+                },
+                dataType: "json",
+                success: function (data) {
+                    layui.use('layer', function() {
+                        var layer = layui.layer;
+                        //icon:0为惊叹号，1为勾。2为叉，3为问号，4为锁，5为不开心
+                        layer.msg('操作成功！', {icon: 1});
+                    });
+                },
+                error: function (data) {
+                    layui.use('layer', function() {
+                        var layer = layui.layer;
+                        layer.msg('操作失败！', {icon: 2});
+                    });
+                }
+            })
+
+        });
+    })
+
 </script>
 
+<script type="text/html" id="barDemo">
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+</script>
+
+<script type="text/html" id="switchTpl">
+    <!--默认d为获取到的data，所以可以直接获取到share值，通过share值使用三目运算符简洁的标识check框是否选中-->
+    <input type="checkbox" name="limit" value="{{d.id}}" lay-skin="switch" lay-text="隐藏|开放" lay-filter="sexDemo" {{ d.share==0 ? '':'checked'}}>
+</script>
 </html>
 
 

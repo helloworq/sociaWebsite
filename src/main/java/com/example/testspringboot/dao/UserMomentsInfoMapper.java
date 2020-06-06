@@ -47,4 +47,7 @@ public interface UserMomentsInfoMapper {
 
     @Select("select likes from user_moments_info where id=#{momentID}")
     int selectLikesNumber(int momentID);
+
+    @Select("select collect from user_moments_info where id=#{momentID}")
+    int selectCollectNumber(int momentID);
 }

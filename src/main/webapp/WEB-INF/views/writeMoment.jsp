@@ -44,23 +44,10 @@
     <div class="layui-header">
         <div class="layui-logo">公考小分队</div>
         <!-- 头部区域（可配合layui已有的水平导航） -->
-        <ul class="layui-nav layui-layout-left">
-            <li class="layui-nav-item"><a href="">个人中心</a></li>
-            <li class="layui-nav-item"><a href="">我的主页</a></li>
-            <li class="layui-nav-item"><a href="">用户</a></li>
-            <li class="layui-nav-item">
-                <a href="javascript:;">其它</a>
-                <dl class="layui-nav-child">
-                    <dd><a href="">邮件管理</a></dd>
-                    <dd><a href="">消息管理</a></dd>
-                    <dd><a href="">授权管理</a></dd>
-                </dl>
-            </li>
-        </ul>
         <ul class="layui-nav layui-layout-right">
             <li class="layui-nav-item">
-                <a href="javascript:;">
-                    <img src="http://t.cn/RCzsdCq" class="layui-nav-img">
+                <a href="javascript:;" id="rightName">
+                    <img src="/img/5050.jpg" class="layui-nav-img" id="rightIcon">
                     贤心
                 </a>
                 <dl class="layui-nav-child">
@@ -83,20 +70,22 @@
                         <dd><a href="personalPage">我的动态</a></dd>
                         <dd><a href="myFriends">我的好友</a></dd>
                         <dd><a href="writeMoment">编写动态</a></dd>
-                        <dd><a href="myInfo">我的信息</a></dd>
-                        <dd><a href="myCollect">我的收藏</a></dd>
-                        <dd><a href="userCommentPage">用户评论</a></dd>
                         <!--dd><a href="">超链接</a></dd-->
                     </dl>
                 </li>
                 <li class="layui-nav-item">
-                    <a href="javascript:;">签到打卡</a>
+                    <a href="javascript:;">我的</a>
                     <dl class="layui-nav-child">
-                        <dd><a href="javascript:;">我的签到</a></dd>
+                        <dd><a href="myInfo">我的信息</a></dd>
+                        <dd><a href="myCollect">我的收藏</a></dd>
+                        <dd><a href="userCommentPage">动态管理</a></dd>
+                        <dd><a href="findFriends">搜索好友</a></dd>
+
+                        <!--dd><a href="javascript:;">我的签到</a></dd>
                         <dd><a href="javascript:;">签到广场</a></dd>
                         <dd><a href="javascript:;">签到记录</a></dd>
                         <dd><a href="javascript:;">打卡排行榜</a></dd>
-                        <!--dd><a href="">超链接</a></dd-->
+                        <dd><a href="">超链接</a></dd-->
                     </dl>
                 </li>
                 <li class="layui-nav-item">
@@ -108,9 +97,9 @@
                     </dl>
                 </li>
                 <li class="layui-nav-item">
-                    <a href="javascript:;">待开发</a>
+                    <a href="javascript:;">留言板</a>
                     <dl class="layui-nav-child">
-                        <dd><a href="javascript:;">待开发</a></dd>
+                        <dd><a href="userMessage">我的留言</a></dd>
                         <dd><a href="javascript:;">待开发</a></dd>
                         <!--dd><a href="">超链接</a></dd-->
                     </dl>

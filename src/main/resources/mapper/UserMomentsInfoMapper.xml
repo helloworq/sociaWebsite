@@ -172,6 +172,7 @@
         select * from user_moments_info
         where userNickName in
          (select friendname from user_relation where username=#{userName,jdbcType=VARCHAR})
+         AND share=0
          limit #{page,jdbcType=INTEGER},15
   </select>
 

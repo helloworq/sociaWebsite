@@ -39,7 +39,7 @@
                 },
                 dataType: "json",
                 success: function (data) {
-                    alert("ajax成功" + data.msg)
+                    alert("登录成功！" + data.msg)
                     //window.location.href="/myFriends"
                     if(data.msg=="success")
                         window.location.href="/myFriends";

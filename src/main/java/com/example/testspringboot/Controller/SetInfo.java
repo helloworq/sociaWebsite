@@ -1,4 +1,4 @@
-package com.example.testspringboot.Service;
+package com.example.testspringboot.Controller;
 
 
 import com.alibaba.fastjson.JSON;
@@ -20,8 +20,15 @@ import java.util.Map;
 
 @Controller
 @RequestMapping("/controller")
-public class layuiTest {
-
+public class SetInfo {
+    @Autowired
+    CollectMapper collectMapper;
+    @Autowired
+    UserRelationMapper userRelationMapper;
+    @Autowired
+    UserMomentsInfoMapper userMomentsInfoMapper;
+    @Autowired
+    UsermessageMapper usermessageMapper;
     /**
      *
      * @param momentInfo
@@ -85,6 +92,7 @@ public class layuiTest {
      * @param page
      * @return
      */
+    /**
     @ResponseBody
     @RequestMapping(value = "/layuiTest",method = RequestMethod.GET)
     public Map<String,Object> get_info_list(@RequestParam(value = "page",required = false) Integer page) {
@@ -99,10 +107,12 @@ public class layuiTest {
         return res;
     }
 
+
     /**
      * 测试用例。测试默认的layui滚动加载所提供的测试用例
      * @return
      */
+    /**
     @ResponseBody
     @RequestMapping(value = "/layuiTest2",method = RequestMethod.GET)
     public Map<String,Object> get_info_list_2() {
@@ -116,94 +126,16 @@ public class layuiTest {
         res.put("data", JSON.toJSON(list));
         return res;
     }
-
-
-    @Autowired
-    UserMomentsInfoMapper userMomentsInfoMapper;
-
-    /**
-     * 接口。登录完成后从数据库中获取我的全部好友动态信息的接口
-     * @param page
-     * @return
-     */
-    @ResponseBody
-    @RequestMapping(value = "/get_info_list_friendInfo",method = RequestMethod.GET)
-    public Map<String,Object> get_info_list_friendInfo(
-            @RequestParam(value = "page",required = false) Integer page
-            , HttpServletRequest httpRequeste) {
-        //根据登录用户获取全部的好友动态
-        System.out.println("有新请求进入"+page);
-        //获取cookie值
-        Cookie[] cookies=httpRequeste.getCookies();
-        String userName=getCookie(cookies,"userName");
-        System.out.println("获取用户cookie值为："+userName);
-        //根据获取到的用户名根据用户的社交关系获取数据库中对应好友的信息
-        //先从user_relation表中获取用户所有的关注的好友，
-        //然后从根据好友名字依次获取所有的好友动态
-        HashMap res=new HashMap();
-        //每次取钱15个结果当作一页，以page数值为分割
-        page=((page-1)*15);
-        ArrayList<UserMomentsInfo> list=userMomentsInfoMapper.selectFriendsInfoByfriendName(userName,page);
-        res.put("msg","success");
-        res.put("data", JSON.toJSON(list));
-        //如果pages数值大于整数例如(pages=2.1)必须将pages取为3
-        double pages_unHandle=(double ) userMomentsInfoMapper.selectByfriendNameofCount(userName)/15;
-        //System.out.println(pages_unHandle+"="+userMomentsInfoMapper.selectByfriendNameofCount(userName)+"="+userMomentsInfoMapper.selectByfriendNameofCount(userName)/15);
-        //(int)pages_unHandle只可能比pages_unHandle小或者等于，所以使用三目运算符直接计算
-        int pages=pages_unHandle>(int)pages_unHandle?(int)pages_unHandle+1:(int)pages_unHandle;
-        res.put("pages",pages);
-        return res;
-    }
-
-    @Autowired
-    UserRelationMapper userRelationMapper;
-    @ResponseBody
-    @RequestMapping(value = "/get_info_list_followedFriendInfo",method = RequestMethod.GET)
-    public Map<String,Object> get_info_list_followedFriendInfo(
-            @RequestParam(value = "page",required = false) Integer page,
-            HttpServletRequest httpRequeste) {
-        System.out.println("有新请求进入"+page);
-        HashMap res=new HashMap();
-        //获取登录用户名
-        Cookie[] cookies=httpRequeste.getCookies();
-        String userName=getCookie(cookies,"userName");
-        System.out.println("获取用户cookie值为："+userName);
-
-        ArrayList<friendChartEntiy> list=userRelationMapper.selectFriendChartEntiy(userName);
-        //list.add(userRelationMapper.selectByPrimaryKey(i));
-        //此接口需要获取好友的（头像链接，好友的昵称，好友的关注时间）
-        //其中好友的头像链接，好友的昵称需要从表获取，好友的关注时间从userrelation表中获取
-
-        res.put("msg","success");
-        res.put("data", JSON.toJSON(list));
-        return res;
-    }
+    */
 
 
 
-    @ResponseBody
-    @RequestMapping(value = "/get_info_list_personalInfo",method = RequestMethod.GET)
-    public Map<String,Object> get_info_list_personalInfo(
-            @RequestParam(value = "page",required = false) Integer page,
-            HttpServletRequest httpRequeste) {
-        //此接口根据用户名获取自己的所有动态
-        System.out.println("有新请求进入"+page);
-        HashMap res=new HashMap();
-        //获取登录用户名
-        Cookie[] cookies=httpRequeste.getCookies();
-        String userName=getCookie(cookies,"userName");
-        System.out.println("获取用户cookie值为："+userName);
-        ArrayList<UserMomentsInfo> list=userMomentsInfoMapper.selectByUserName(userName);
-        res.put("msg","success");
-        res.put("data", JSON.toJSON(list));
-        res.put("myName",userName);
-        return res;
-    }
 
     @ResponseBody
     @RequestMapping(value = "/cancelFollow",method = RequestMethod.GET)
-    public Map<String,Object> cancelFollow(@RequestParam(value = "friendName") String friendName,
-                                           HttpServletRequest httpRequeste) {
+    public Map<String,Object> cancelFollow(
+            @RequestParam(value = "friendName") String friendName,
+            HttpServletRequest httpRequeste) {
         //此接口实现用户的取消关注功能，由于本应用的关注非强关注，即A关注B，B不一定会关注A
         //删除需要两个数据，一个是ajax访问时的登陆用户名，另一个是删除的好友名
         System.out.println("有新请求进入cancel");
@@ -231,25 +163,49 @@ public class layuiTest {
     //第二点相对麻烦一点，初步设想是建一个新表，
 
     /**
-     *
+     * 收藏功能设计的数据表有四个字段：id，collectMomentID，time，whoCollect
+     * 用户点击收藏键后，和点赞评论一样先在collect表中传入对应数据，再在user_mo
+     * ment_info表中将collect字段自增一.
+     * 收藏功能暂时设计的比赞功能多一个展示功能，即在我的收藏选项卡下可以看到我收藏的动态
      * @param httpRequeste
      * @return
      */
     @ResponseBody
     @RequestMapping(value = "/actionOfCollect",method = RequestMethod.GET)
-    public Map<String,Object> actionCollect(HttpServletRequest httpRequeste) {
+    public Map<String,Object> actionCollect(
+            @RequestParam(value = "receviedCollectID") Integer receviedCollectID,
+            HttpServletRequest httpRequeste) {
         //此接口实现用户的收藏功能
-        System.out.println("有新请求进入");
+        System.out.println("有新请求进入actionOfCollect，动态ID:"+receviedCollectID);
         HashMap res=new HashMap();
-        //判断传入的好友名
-
         //获取登录用户名
         Cookie[] cookies=httpRequeste.getCookies();
         String userName=getCookie(cookies,"userName");
         System.out.println("获取用户cookie值为："+userName);
-        //开始操作数据库
-        res.put("msg","success");
-        return res;
+        //这里需要注意，收藏和赞不一样，收藏功能不允许重复收藏。所以这里需要判断收藏者是否已经收藏此动态
+        //System.out.println("test："+collectMapper.userCollectedMoment("秦始皇"));
+        //开始判断，如果用户已经收藏过这个动态则返回收藏失败信息
+        if (!collectMapper.userCollectedMoment(userName).contains(receviedCollectID)) {
+            //创建对象
+            Collect collect = new Collect();
+            collect.setCollecttime(new Date());
+            collect.setCollectmomentid(receviedCollectID);
+            collect.setWhocollect(userName);
+            collectMapper.insert(collect);
+            //开始操作数据库
+            //likes表赋值完成后需要在user_moment_info表里将对应动态的likes数值自增1
+            UserMomentsInfo userMomentsInfo = new UserMomentsInfo();
+            userMomentsInfo.setId(receviedCollectID);
+            System.out.println(userMomentsInfoMapper.selectCollectNumber(receviedCollectID));
+            userMomentsInfo.setCollect(userMomentsInfoMapper.selectCollectNumber(receviedCollectID) + 1);
+            userMomentsInfoMapper.updateByPrimaryKeySelective(userMomentsInfo);
+            res.put("msg", "success");
+            return res;
+        }
+        else {
+            res.put("msg", "fail");
+            return res;
+        }
     }
 
     @ResponseBody
@@ -287,9 +243,10 @@ public class layuiTest {
      */
     @ResponseBody
     @RequestMapping(value = "/actionOfComment",method = RequestMethod.POST)
-    public Map<String,Object> actionOfComment(@RequestParam(value = "textareaText") String textareaText,
-                                              @RequestParam(value = "receviedCommentID") Integer receviedCommentID,
-                                              HttpServletRequest httpRequeste) {
+    public Map<String,Object> actionOfComment(
+            @RequestParam(value = "textareaText") String textareaText,
+            @RequestParam(value = "receviedCommentID") Integer receviedCommentID,
+            HttpServletRequest httpRequeste) {
         //此接口实现用户的评论功能
         System.out.println("有新请求进入actionOfComment");
         System.out.println("textareaText："+textareaText+"receviedCommentID：  "+receviedCommentID);
@@ -321,35 +278,69 @@ public class layuiTest {
     }
 
 
+
+
     /**
-     * 此接口用来拉取动态的评论，会传入两个参数，page和动态id
-     * 虽然会传入page值，但是考虑到规模小，暂不做分页处理
-     * 所以就是根据receviedCommentID值找到评论，需要传回的字段有usernickname，content，picurl
+     * 用户留言功能
+     * 用户留言功能有两个场景，第一个是自己查看自己的留言，第二个是查看别人的留言。这两个场景需要
+     * 分别开来。去给别人留言的时候
+     * @param page
      * @param httpRequeste
      * @return
      */
     @ResponseBody
-    @RequestMapping(value = "/get_info_list_userComment",method = RequestMethod.GET)
-    public Map<String,Object> get_info_list_userComment(
+    @RequestMapping(value = "/userMessage",method = RequestMethod.GET)
+    public Map<String,Object> userMessage(
             @RequestParam(value = "page") Integer page,
-            @RequestParam(value = "receviedCommentID") Integer receviedCommentID,
             HttpServletRequest httpRequeste) {
         //此接口实现用户的点赞功能
-        System.out.println("拉取动态评论...");
+        System.out.println("获取用户留言...");
         HashMap res=new HashMap();
-        //判断传入的动态id值
-        System.out.println(page+" "+receviedCommentID);
-        //获取数据
-        ArrayList<Comment> list=commentMapper.selectByReceviedCommentID(receviedCommentID);
+        //获取用户名
         Cookie[] cookies=httpRequeste.getCookies();
         String userName=getCookie(cookies,"userName");
         System.out.println("获取用户cookie值为："+userName);
         //开始操作数据库
+        ArrayList<Usermessage> list=usermessageMapper.selectAll(userName);
         System.out.println(JSON.toJSON(list).toString());
         res.put("data",JSON.toJSON(list));
         res.put("msg","success");
         return res;
     }
+
+
+    /**
+     *     id           int auto_increment
+     *     primary key,
+     *     userHeadUrl  varchar(50) null,
+     *     userName     varchar(20) not null,
+     *     userSex      varchar(5)  not null,
+     *     userJoinTime datetime    not null,
+     *     userBirthday datetime    not null,
+     *     userAge      int         not null,
+     *     userNickName varchar(20) null,
+     *
+     *     上面的信息为用户信息表的字段，初步设计将上述字段信息按序排列出来显示
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(value = "/get_info_list_MyInfo",method = RequestMethod.GET)
+    public Map<String,Object> get_info_list_MyInfo(
+            HttpServletRequest httpRequeste
+    ) {
+        //此接口实现用户的点赞功能
+        System.out.println("开始获取我的信息...");
+        HashMap res=new HashMap();
+        //获取登录用户名
+        Cookie[] cookies=httpRequeste.getCookies();
+        String userName=getCookie(cookies,"userName");
+        //将user_info表中的特定用户信息获取并返回
+        UserInfo userInfo=userInfoMapper.selectByUsername(userName);
+        res.put("userinfo",userInfo);
+        res.put("msg","success");
+        return res;
+    }
+
 
 
     @Autowired
@@ -366,10 +357,10 @@ public class layuiTest {
     @ResponseBody
     @RequestMapping(value = "/actionOfLikes",method = RequestMethod.GET)
     public Map<String,Object> actionOfLikes(
-            @RequestParam(value = "receviedCommentIDofLikes") Integer receviedCommentID,
+            @RequestParam(value = "receviedCommentIDofLikes") Integer receviedCommentIDofLikes,
             HttpServletRequest httpRequeste) {
         //此接口实现用户的点赞功能
-        System.out.println("有新请求进入点赞，获取receviedCommentID值为："+receviedCommentID);
+        System.out.println("有新请求进入点赞，获取receviedCommentID值为："+receviedCommentIDofLikes);
         HashMap res=new HashMap();
         //获取登录用户名
         Cookie[] cookies=httpRequeste.getCookies();
@@ -377,13 +368,13 @@ public class layuiTest {
         //开始赋值参数
         Likes likes=new Likes();
         likes.setTime(new Date());
-        likes.setUserlikesmomentid(receviedCommentID);
+        likes.setUserlikesmomentid(receviedCommentIDofLikes);
         likes.setLikesusername(userName);
         likesMapper.insert(likes);
         //likes表赋值完成后需要在user_moment_info表里将对应动态的likes数值自增1
         UserMomentsInfo userMomentsInfo=new UserMomentsInfo();
-        userMomentsInfo.setId(receviedCommentID);
-        userMomentsInfo.setLikes(userMomentsInfoMapper.selectLikesNumber(receviedCommentID)+1);
+        userMomentsInfo.setId(receviedCommentIDofLikes);
+        userMomentsInfo.setLikes(userMomentsInfoMapper.selectLikesNumber(receviedCommentIDofLikes)+1);
         userMomentsInfoMapper.updateByPrimaryKeySelective(userMomentsInfo);
         System.out.println("获取用户cookie值为："+userName);
         //开始操作数据库
@@ -392,6 +383,134 @@ public class layuiTest {
         res.put("msg","success");
         return res;
     }
+
+
+    /**
+     * 此方法是点击用户头像进入对应用户的主页，和获取自己主页信息方法基本一样，不同的是用户名不是通过httpRequeste获取
+     * 而是直接通过传入的用户名参数
+     * @param page
+     * @param httpRequeste
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(value = "/get_info_list_personalInfo_of_PersonInfo",method = RequestMethod.GET)
+    public Map<String,Object> get_info_list_personalInfo_of_PersonInfo(
+            @RequestParam(value = "page",required = false) Integer page,
+            @RequestParam(value = "username",required = false) String userName,
+            HttpServletRequest httpRequeste) {
+        //此接口根据用户名获取自己的所有动态
+        System.out.println("有新请求进入userpage"+page);
+        HashMap res=new HashMap();
+        //获取登录用户名
+        System.out.println("获取用户cookie值为："+userName);
+        ArrayList<UserMomentsInfo> list=userMomentsInfoMapper.selectByUserName(userName);
+        res.put("msg","success");
+        res.put("data", JSON.toJSON(list));
+        res.put("myName",userName);
+        return res;
+    }
+
+
+    /**
+     * 此接口用来控制用户的动态权限，以share字段为控制。
+     * 0为开放，1为隐藏默认是开放
+     * 设置完权限后用户再拉取好友动态时将进行判定是否限制
+     *
+     *
+     * 只需要将开关值以及动态id传进来即可
+     * @param httpRequeste
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(value = "/setMomentLimit",method = RequestMethod.GET)
+    public Map<String,Object> setMomentLimit(
+            @RequestParam(value = "MomentID",required = false) Integer MomentID,
+            @RequestParam(value = "switchStatus",required = false) Integer switchStatus,
+            @RequestParam(value = "changedContent",required = false) String changedContent,
+            HttpServletRequest httpRequeste) {
+        //此接口根据用户名获取自己的所有动态
+        System.out.println("有新请求进入userpage--"+MomentID+"--"+switchStatus+"--"+changedContent);
+        HashMap res=new HashMap();
+        //获取用户名
+        Cookie[] cookies=httpRequeste.getCookies();
+        String userName=getCookie(cookies,"userName");
+        UserMomentsInfo userMomentsInfo=new UserMomentsInfo();
+        userMomentsInfo.setId(MomentID);
+        if (switchStatus==1){//如果用户想隐藏动态
+            userMomentsInfo.setShare(1);
+            userMomentsInfoMapper.updateByPrimaryKeySelective(userMomentsInfo);
+            System.out.println("更新成功");
+        }
+        else if (switchStatus==0){
+            userMomentsInfo.setShare(0);
+            userMomentsInfoMapper.updateByPrimaryKeySelective(userMomentsInfo);
+            System.out.println("更新失败");
+        }
+        System.out.println("获取用户cookie值为："+userName);
+        res.put("msg","success");
+        return res;
+    }
+
+
+
+    @ResponseBody
+    @RequestMapping(value = "/setMoment",method = RequestMethod.POST)
+    public Map<String,Object> setMoment(
+            @RequestParam(value = "MomentID",required = false) Integer MomentID,
+            @RequestParam(value = "changedContent",required = false) String changedContent,
+            HttpServletRequest httpRequeste) {
+        //此接口根据用户名获取自己的所有动态
+        System.out.println("有新请求进入userpage--"+MomentID+"--"+changedContent);
+        HashMap res=new HashMap();
+        //获取用户名
+        Cookie[] cookies=httpRequeste.getCookies();
+        String userName=getCookie(cookies,"userName");
+        UserMomentsInfo userMomentsInfo=new UserMomentsInfo();
+        userMomentsInfo.setId(MomentID);
+        userMomentsInfo.setContent(changedContent);
+        userMomentsInfoMapper.updateByPrimaryKeySelective(userMomentsInfo);
+        System.out.println("获取用户cookie值为："+userName);
+        res.put("msg","success");
+        return res;
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/deleteMoment",method = RequestMethod.POST)
+    public Map<String,Object> deleteMoment(
+            @RequestParam(value = "MomentID",required = false) Integer MomentID,
+            HttpServletRequest httpRequeste) {
+        //此接口根据用户名获取自己的所有动态
+        System.out.println("有新请求进入userpage--"+MomentID+"--");
+        HashMap res=new HashMap();
+        //获取用户名
+        Cookie[] cookies=httpRequeste.getCookies();
+        String userName=getCookie(cookies,"userName");
+        userMomentsInfoMapper.deleteByPrimaryKey(MomentID);
+        System.out.println("获取用户cookie值为："+userName);
+        res.put("msg","success");
+        return res;
+    }
+
+
+    @ResponseBody
+    @RequestMapping(value = "/follow",method = RequestMethod.POST)
+    public Map<String,Object> follow(
+            @RequestParam(value = "MomentID",required = false) Integer MomentID,
+            HttpServletRequest httpRequeste) {
+        //此接口根据用户名获取自己的所有动态
+        System.out.println("有新请求进入userpage--"+MomentID+"--");
+        HashMap res=new HashMap();
+        //获取用户名
+        Cookie[] cookies=httpRequeste.getCookies();
+        String userName=getCookie(cookies,"userName");
+        userMomentsInfoMapper.deleteByPrimaryKey(MomentID);
+        System.out.println("获取用户cookie值为："+userName);
+        res.put("msg","success");
+        return res;
+    }
+
+
+
 
 
     String getCookie(Cookie[] cookies,String key){
@@ -404,6 +523,4 @@ public class layuiTest {
         }
         return null;
     }
-
-
 }
