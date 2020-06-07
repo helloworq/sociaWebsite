@@ -202,4 +202,8 @@ public class Hello {
         return "userMessage";
     }
 
+    @RequestMapping("/exchange")
+    public void exchange(){
+
+    }
 }
