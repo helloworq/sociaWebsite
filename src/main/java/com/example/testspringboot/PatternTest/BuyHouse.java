@@ -1,4 +1,5 @@
 package com.example.testspringboot.PatternTest;
 
-public class MyProxy {
+public interface BuyHouse {
+    void buyHouse();
 }
