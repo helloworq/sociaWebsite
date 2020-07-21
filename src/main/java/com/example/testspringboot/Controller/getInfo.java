@@ -4,6 +4,7 @@ package com.example.testspringboot.Controller;
 import com.alibaba.fastjson.JSON;
 import com.example.testspringboot.dao.*;
 import com.example.testspringboot.entiy.*;
+import io.swagger.annotations.Api;
 import org.apache.ibatis.annotations.Select;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.text.PDFTextStripper;
@@ -23,6 +24,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+@Api
 @Controller
 @RequestMapping("/controller")
 public class getInfo {
@@ -35,6 +37,16 @@ public class getInfo {
      * @param page
      * @return
      */
+    @Controller
+    public class HomeController {
+
+        @RequestMapping(value = "/swagger")
+        public String index() {
+            System.out.println("swagger-ui.html");
+            return "redirect:swagger-ui.html";
+        }
+    }
+
     @ResponseBody
     @RequestMapping(value = "/get_info_list_friendInfo",method = RequestMethod.GET)
     public Map<String,Object> get_info_list_friendInfo(

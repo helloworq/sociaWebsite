@@ -263,9 +263,6 @@ class DemoApplicationTests {
         mapper1.insertList(list);
         //System.out.println(JSON.toJSON(list));*/
 
-
-
-
     }
 
 }
